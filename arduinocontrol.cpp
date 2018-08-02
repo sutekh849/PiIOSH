@@ -18,12 +18,7 @@ arduinoControl::arduinoControl()
 {
     //virtual constructor sufficient
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void arduinoControl::setCOMport(int id)
-{
-
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void arduinoControl::keepAlive()
@@ -32,12 +27,11 @@ void arduinoControl::keepAlive()
 	{
 		if(f != nullptr)
 		{
-			setDigitalPin(8,door1);
-			setDigitalPin(9,door2);
-			setDigitalPin(10,door3);
-			setDigitalPin(11,door4);
-            setDigitalPin(10,door5);
-            setDigitalPin(11,door6);
+			for (int i = 8; i <14;i++)
+			{
+				setDigitalPin(i,doors[i-8]);
+			}
+
 		}
         else
         {
@@ -63,7 +57,7 @@ bool arduinoControl::activate()
             try {
                 serialio = std::make_shared<firmata::FirmSerial>(port.port.c_str());
 
-    #ifndef WIN32
+    #ifndef WIN32 //this should always be the case as the library is unreliable on windows.
                 if (serialio->available()) {
                     sleep(3); // Seems necessary on linux
                     f = std::make_shared<firmata::Firmata<firmata::Base, firmata::I2C>>(serialio.get());
@@ -137,12 +131,10 @@ bool arduinoControl::activate()
 		f->pinMode(11,MODE_SERVO);
         f->pinMode(12,MODE_SERVO);
         f->pinMode(13,MODE_SERVO);
-		f->analogWrite(8,door1);
-		f->analogWrite(9,door2);
-		f->analogWrite(10,door3);
-		f->analogWrite(11,door4);
-        f->analogWrite(12,door5);
-        f->analogWrite(13,door6);
+		for (int i = 8; i <14;i++)
+		{
+			setDigitalPin(i,doors[i-8]);
+		}
 		std::thread p (&arduinoControl::keepAlive,this);
 		p.detach();
 	}
@@ -185,30 +177,9 @@ void arduinoControl::setDigitalPin(uint8_t id, uint32_t value)
 		if(f!=nullptr)
 		{
 			f->analogWrite(id,value);
-			if(id == 8)
-			{
-				door1 = value;
-			}
-			else if(id == 9)
-			{
-				door2 = value;
-			}
-			else if (id==10)
-			{
-				door3 = value;
-			}
-			else if(id==11)
-			{
-				door4 = value;
-			}
-            else if(id==12)
-            {
-                door5 = value;
-            }
-            else if(id ==13)
-            {
-                door6 = value;
-            }
+			// this should be a switch. or better yet..
+			doors[id-8] = value;
+			//much tidier.
 		}
 	}
 	catch (firmata::IOException e)

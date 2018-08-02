@@ -10,7 +10,6 @@ class netThread
 public:
     netThread(std::shared_ptr<arduinoControl> ac);
     void run();
-    void spawn();
     void setTime(int Time);
     void setDelay(int Delay);
     std::shared_ptr<udp_server> UDP_server= nullptr;

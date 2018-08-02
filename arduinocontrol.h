@@ -23,12 +23,7 @@ public:
     std::vector<firmata::PortInfo> ports;
     std::shared_ptr<firmata::Firmata<firmata::Base, firmata::I2C>> f = nullptr;
     std::shared_ptr<firmata::FirmSerial> serialio = nullptr;
-	uint32_t door1 = 0;
-    uint32_t door2 = 180;
-	uint32_t door3 = 0;
-	uint32_t door4 = 180;
-    uint32_t door5 = 0;//hope so.
-    uint32_t door6 = 180;
+	std::vector<uint32_t> doors = {0,180,0,180,0,180};
     void switchDiffuser(bool on);
     void setDigitalPin(uint8_t id, uint32_t value);
     void setCOMport(int id);

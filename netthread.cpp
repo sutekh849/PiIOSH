@@ -19,12 +19,6 @@ void netThread::setTime(int Time)
 void netThread::run()
 {
     
-    std::thread p (&netThread::spawn,this);
-    p.join();
-}
-
-void netThread::spawn()
-{
     try{
         boost::asio::io_service io_service;
 
@@ -38,6 +32,6 @@ void netThread::spawn()
     {
         std::cerr<< e.what() << std::endl;
     }
-
 }
+
 
